@@ -298,7 +298,7 @@ d3.csv(path).then(function(healthData, err) {
 
     // updates tooltips with new info
     circlesGroup = updateToolTip(xAxisChoice, yAxisChoice, circlesGroup);
-
+    
     // updating labels
     circleLabels.text('');
     circleLabels.transition()
@@ -317,7 +317,7 @@ d3.csv(path).then(function(healthData, err) {
       .attr('text-anchor', 'middle')
       .attr('alignment-baseline', 'middle')
       .attr('fill', 'black');
-
+    
     // new title
     // title options
     var yTitleLabel;
