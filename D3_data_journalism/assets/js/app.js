@@ -176,6 +176,25 @@ d3.csv(path).then(function(healthData, err) {
     .attr('fill', 'pink')
     .attr('opacity', '.5');
 
+  // creating labels on the circles   
+  var circleLabels = chartGroup.selectAll(null).data(healthData)
+    .enter().append('text');
+  circleLabels
+    .attr('x', function(d) {
+      return xLinScale(d[xAxisChoice]);
+    })
+    .attr('y', function(d) {
+      return yLinScale(d[yAxisChoice]);
+    })
+    .text(function(d) {
+      return d.abbr;
+    })
+    .attr('font-family', 'sans-serif')
+    .attr('font-size', '10px')
+    .attr('text-anchor', 'middle')
+    .attr('alignment-baseline', 'middle')
+    .attr('fill', 'white');
+
   // Create group for two x-axis labels
   var xLabelsGroup = chartGroup.append('g')
     .attr('transform', `translate(${chartWidth / 2}, ${chartHeight + 20})`);
@@ -234,6 +253,7 @@ d3.csv(path).then(function(healthData, err) {
   // updateToolTip function above csv import
   var circlesGroup = updateToolTip(xAxisChoice, yAxisChoice, circlesGroup);
 
+  // function to update the data on user selection
   function updateData() {
     var value = d3.select(this).attr('value');
 
