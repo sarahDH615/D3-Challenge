@@ -82,6 +82,26 @@ function renderCircles(circlesGroup, newXScale, xAxisChoice, newYScale, yAxisCho
   return circlesGroup;
 }
 
+// function to label circles
+function renderCircleLabels(circleLabels, xAxisChoice, yAxisChoice) {
+    circleLabels.text('');
+    circleLabels
+        .attr('x', function(d) {
+          return xScale(d[xAxisChoice]);
+        })
+        .attr('y', function(d) {
+          return yScale(d[yAxisChoice]);
+        })
+        .text(function(d) {
+          return d.abbr;
+        })
+        .attr('font-family', 'sans-serif')
+        .attr('font-size', '10px')
+        .attr('text-anchor', 'middle')
+        .attr('alignment-baseline', 'middle')
+        .attr('fill', 'black');
+}
+
 // function used for updating circles group with new tooltip
 function updateToolTip(xAxisChoice, yAxisChoice, circlesGroup) {
 
@@ -179,6 +199,7 @@ d3.csv(path).then(function(healthData, err) {
   // creating labels on the circles   
   var circleLabels = chartGroup.selectAll(null).data(healthData)
     .enter().append('text');
+
   circleLabels
     .attr('x', function(d) {
       return xLinScale(d[xAxisChoice]);
@@ -193,7 +214,7 @@ d3.csv(path).then(function(healthData, err) {
     .attr('font-size', '10px')
     .attr('text-anchor', 'middle')
     .attr('alignment-baseline', 'middle')
-    .attr('fill', 'white');
+    .attr('fill', 'black');
 
   // Create group for two x-axis labels
   var xLabelsGroup = chartGroup.append('g')
@@ -277,6 +298,25 @@ d3.csv(path).then(function(healthData, err) {
 
     // updates tooltips with new info
     circlesGroup = updateToolTip(xAxisChoice, yAxisChoice, circlesGroup);
+
+    // updating labels
+    circleLabels.text('');
+    circleLabels.transition()
+      .duration(1000)
+      .attr('x', function(d) {
+        return xLinScale(d[xAxisChoice]);
+      })
+      .attr('y', function(d) {
+        return yLinScale(d[yAxisChoice]);
+      })
+      .text(function(d) {
+        return d.abbr;
+      })
+      .attr('font-family', 'sans-serif')
+      .attr('font-size', '10px')
+      .attr('text-anchor', 'middle')
+      .attr('alignment-baseline', 'middle')
+      .attr('fill', 'black');
 
     // new title
     // title options
