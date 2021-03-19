@@ -121,17 +121,17 @@ function makeResponsive() {
     var xLabel; var yLabel;
 
     if (xAxisChoice === 'poverty') {
-      xLabel = '% in Poverty:';
+      xLabel = 'Poverty (%):';
     }
     else {
-      xLabel = 'Median Household Income:';
+      xLabel = 'Income (Mdn.):';
     }
 
     if (yAxisChoice === 'obesity') {
-      yLabel = '% Obese:';
+      yLabel = 'Obese (%):';
     }
     else {
-      yLabel = '% who Smoke:';
+      yLabel = 'Smokers (%):';
     }
 
     var toolTip = d3.tip()
