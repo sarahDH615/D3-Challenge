@@ -1,14 +1,17 @@
+// function to allow graph to fit on any page size
 function makeResponsive() {
+  // select area where svg would be
   var svgArea = d3.select('body').select('svg');
-
+  // if there is a chart there, remove it (then redraw below)
   if (!svgArea.empty()) {
     svgArea.remove();
   }
 
-  
+  // sizes of the svg based on the window width/height
   var svgWidth = window.innerWidth * 5/6;
-  var svgHeight = window.innerHeight;
+  var svgHeight = window.innerHeight * 4.5/6;
 
+  // margins between svg and chart
   var margin = {
     top: 50,
     right: 10,
@@ -16,6 +19,7 @@ function makeResponsive() {
     left: 60
   };
 
+  // chart width and height
   var chartWidth = svgWidth - margin.left - margin.right;
   var chartHeight = svgHeight - margin.top - margin.bottom;
 
@@ -26,19 +30,19 @@ function makeResponsive() {
     .attr('width', svgWidth)
     .attr('height', svgHeight);
 
-  // Append an SVG group
+  // create and append chart group, shifted down and right by margins
   var chartGroup = svg.append('g')
     .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-  // Initial Params
+  // starting axes display
   var xAxisChoice = 'poverty';
   var yAxisChoice = 'obesity';
 
   // functions
   // ---------------------------------------------------------------------------------------------
+  // creation of scales - will be adding to min and max values to make some space for the circle radii
   // creation of x axis scale
   function xScale(data, xAxisChoice) {
-    // create scales
     var xLinScale = d3.scaleLinear()
       .domain([d3.min(data, d => d[xAxisChoice]) - (d3.min(data, d => d[xAxisChoice])*0.2), d3.max(data, d => d[xAxisChoice]) + (d3.max(data, d => d[xAxisChoice])*0.1)])
       .range([0, chartWidth]);
@@ -48,7 +52,6 @@ function makeResponsive() {
 
   // creation of y axis scale
   function yScale(data, yAxisChoice) {
-      // create scales
       var yLinScale = d3.scaleLinear()
         .domain([d3.min(data, d => d[yAxisChoice]) - (d3.min(data, d => d[yAxisChoice])*0.2), d3.max(data, d => d[yAxisChoice]) + ((d3.max(data, d => d[yAxisChoice])*0.1))])
         .range([chartHeight, 0]);
@@ -59,7 +62,7 @@ function makeResponsive() {
   // function to update x axis upon click
   function renderXAxis(newXScale, xAxis) {
     var bottomAxis = d3.axisBottom(newXScale);
-
+    // having the x axis change over 1 second
     xAxis.transition()
       .duration(1000)
       .call(bottomAxis);
@@ -70,7 +73,7 @@ function makeResponsive() {
   // function to update y axis upon click
   function renderYAxis(newYScale, yAxis) {
       var leftAxis = d3.axisLeft(newYScale);
-
+      // change will happen over 1 second
       yAxis.transition()
         .duration(1000)
         .call(leftAxis);
@@ -78,14 +81,16 @@ function makeResponsive() {
       return yAxis;
   };
 
-  // function used for updating circles group with a transition to
-  // new circles
+  // function used for updating circles group with a transition to new circles
   function renderCircles(circlesGroup, newXScale, xAxisChoice, newYScale, yAxisChoice) {
 
     circlesGroup.transition()
       .duration(1000)
       .attr('cx', d => newXScale(d[xAxisChoice]))
-      .attr('cy', d => newYScale(d[yAxisChoice]));
+      .attr('cy', d => newYScale(d[yAxisChoice]))
+      .text(function(d) {
+        return d.abbr;
+      });
 
     return circlesGroup;
   }
@@ -116,17 +121,17 @@ function makeResponsive() {
     var xLabel; var yLabel;
 
     if (xAxisChoice === 'poverty') {
-      xLabel = 'Poverty Rate:';
+      xLabel = '% in Poverty:';
     }
     else {
-      xLabel = 'Income:';
+      xLabel = 'Median Household Income:';
     }
 
     if (yAxisChoice === 'obesity') {
-      yLabel = 'Obesity Rate:';
+      yLabel = '% Obese:';
     }
     else {
-      yLabel = 'Smoking Rate:';
+      yLabel = '% who Smoke:';
     }
 
     var toolTip = d3.tip()
@@ -173,13 +178,15 @@ function makeResponsive() {
       d.smokes = +d.smokes;
     });
 
-    // xLinearScale function above csv import
+    // initial data display --------------------------------------------------------------
+    // Axes -------------------------------------------
+    // calling function to create x scale
     var xLinScale = xScale(healthData, xAxisChoice);
 
-    // Create y scale function
+    // calling funct to create y scale
     var yLinScale = yScale(healthData, yAxisChoice);
 
-    // Create initial axis functions
+    // create initial axis functions
     var bottomAxis = d3.axisBottom(xLinScale);
     var leftAxis = d3.axisLeft(yLinScale);
 
@@ -193,19 +200,9 @@ function makeResponsive() {
     var yAxis = chartGroup.append('g')
       .call(leftAxis);
 
-    // append initial circles
-    var circlesGroup = chartGroup.selectAll('circle')
-      .data(healthData)
-      .enter()
-      .append('circle')
-      .attr('cx', d => xLinScale(d[xAxisChoice]))
-      .attr('cy', d => yLinScale(d[yAxisChoice]))
-      .attr('r', 10)
-      .attr('fill', 'pink')
-      .attr('opacity', '.5');
-
-    // creating labels on the circles   
-    var circleLabels = chartGroup.selectAll(null).data(healthData)
+    // Circles -----------------------------------------
+    // creating labels for the circles   
+    var circleLabels = chartGroup.selectAll('circle').data(healthData)
       .enter().append('text');
 
     circleLabels
@@ -223,7 +220,21 @@ function makeResponsive() {
       .attr('text-anchor', 'middle')
       .attr('alignment-baseline', 'middle')
       .attr('fill', 'black');
+    
+    // append circles
+    var circlesGroup = chartGroup.selectAll('circle')
+      .data(healthData)
+      .enter()
+      .append('circle')
+      .attr('cx', d => xLinScale(d[xAxisChoice]))
+      .attr('cy', d => yLinScale(d[yAxisChoice]))
+      .attr('r', 10)
+      .attr('stroke', 'black')
+      .attr('stroke-width', '0.5')
+      .attr('fill', 'pink')
+      .attr('opacity', '.3');
 
+    // Labels ----------------------------------------
     // Create group for two x-axis labels
     var xLabelsGroup = chartGroup.append('g')
       .attr('transform', `translate(${chartWidth / 2}, ${chartHeight + 20})`);
@@ -234,7 +245,7 @@ function makeResponsive() {
       .attr('value', 'poverty') // value to grab for event listener
       .classed('active', true)
       .classed('axis-label', true)
-      .text('Poverty Rate');
+      .text('% in Poverty');
 
     var incomeLabel = xLabelsGroup.append('text')
       .attr('x', 0)
@@ -242,9 +253,9 @@ function makeResponsive() {
       .attr('value', 'income') // value to grab for event listener
       .classed('inactive', true)
       .classed('axis-label', true)
-      .text('Income Rate');
+      .text('Median Household Income');
 
-    // append y axis
+    // append y axis label
     var yLabelsGroup = chartGroup.append('g')
       .attr('transform', 'rotate(-90)');
 
@@ -255,7 +266,7 @@ function makeResponsive() {
       .attr('dy', '1em')
       .classed('active', true)
       .classed('axis-label', true)
-      .text('Obesity Rate');
+      .text('% Obese');
 
     var smokingLabel = yLabelsGroup.append('text')
       .attr('y', 0 - margin.left + 15)
@@ -264,9 +275,17 @@ function makeResponsive() {
       .attr('dy', '1em')
       .classed('inactive', true)
       .classed('axis-label', true)
-      .text('Smoking Rate');
+      .text('% who Smoke');
     
+    // Title -------------------------------------------
     // append title
+    var title_dict = {
+      'poverty': 'Percentage in Poverty',
+      'obesity': 'Percent Obese',
+      'smokes': 'Percentage who Smoke',
+      'income': 'Median Household Income'
+    };
+
     var titleGroup = svg.append('g')
       .attr('transform', `translate(${svgWidth / 2}, 0)`)
     var chartTitle = titleGroup.append('text')
@@ -276,12 +295,13 @@ function makeResponsive() {
       .attr('value', 'poverty_obesity')
       .attr('text-align', 'center')
       .classed('active', true)
-      .text(`${toTitleCase(xAxisChoice)} Rate vs. ${toTitleCase(yAxisChoice)} Rate`);
+      .text(`${title_dict[xAxisChoice]} vs. ${title_dict[yAxisChoice]}`);
 
-
-    // updateToolTip function above csv import
+    // Tooltip ----------------------------------------
+    // add tooltips on the circles
     var circlesGroup = updateToolTip(xAxisChoice, yAxisChoice, circlesGroup);
 
+    // updating data -------------------------------------------------------------------------
     // function to update the data on user selection
     function updateData() {
       var value = d3.select(this).attr('value');
@@ -292,7 +312,7 @@ function makeResponsive() {
           yAxisChoice = value;
       }
 
-      // functions here found above csv import
+      // Axes --------------------------------------------
       // updates x scale for new data
       xLinScale = xScale(healthData, xAxisChoice);
       yLinScale = yScale(healthData, yAxisChoice);
@@ -301,12 +321,7 @@ function makeResponsive() {
       xAxis = renderXAxis(xLinScale, xAxis);
       yAxis = renderYAxis(yLinScale, yAxis);
 
-      // updates circles with new values
-      circlesGroup = renderCircles(circlesGroup, xLinScale, xAxisChoice, yLinScale, yAxisChoice);
-
-      // updates tooltips with new info
-      circlesGroup = updateToolTip(xAxisChoice, yAxisChoice, circlesGroup);
-
+      // Circles ----------------------------------------
       // updating labels
       circleLabels.text('');
       circleLabels.transition()
@@ -319,22 +334,20 @@ function makeResponsive() {
         })
         .text(function(d) {
           return d.abbr;
-        })
-        .attr('font-family', 'sans-serif')
-        .attr('font-size', '10px')
-        .attr('text-anchor', 'middle')
-        .attr('alignment-baseline', 'middle')
-        .attr('fill', 'black');
+        });
       
-      // new title
-      // title options
-      var yTitleLabel;
-      if (yAxisChoice == 'smokes') {
-          yTitleLabel = 'smoking';
-      } else {yTitleLabel = yAxisChoice};
-      // appending new title
-      chartTitle.text(`${toTitleCase(xAxisChoice)} Rate vs. ${toTitleCase(yTitleLabel)} Rate`);
+      // updates circles with new values
+      circlesGroup = renderCircles(circlesGroup, xLinScale, xAxisChoice, yLinScale, yAxisChoice);
+      
+      // Tooltip ----------------------------------------
+      // updates tooltips with new info
+      circlesGroup = updateToolTip(xAxisChoice, yAxisChoice, circlesGroup);
 
+      // Title -----------------------------------------
+      // appending new title
+      chartTitle.text(`${title_dict[xAxisChoice]} vs. ${title_dict[yAxisChoice]}`);
+      
+      // axis labels in/active status
       // changes classes to change bold text
       if (xAxisChoice === 'income') {
           incomeLabel
@@ -354,9 +367,11 @@ function makeResponsive() {
       }
     }
 
+    // event listeners -------------------------------------------------------
     // x axis labels event listener
     xLabelsGroup.selectAll('text')
       .on('click', updateData);
+    // y axis labels event listener
     yLabelsGroup.selectAll('text')
       .on('click', updateData);
   }).catch(function(error) {
@@ -364,5 +379,5 @@ function makeResponsive() {
   })
 };
 makeResponsive();
-
+// event listener for resizing graphs
 d3.select(window).on('resize', makeResponsive);
