@@ -28,7 +28,8 @@ function makeResponsive() {
     .select('#scatter')
     .append('svg')
     .attr('width', svgWidth)
-    .attr('height', svgHeight);
+    .attr('height', svgHeight)
+    .classed('chart', true);
 
   // create and append chart group, shifted down and right by margins
   var chartGroup = svg.append('g')
@@ -88,31 +89,8 @@ function makeResponsive() {
       .duration(1000)
       .attr('cx', d => newXScale(d[xAxisChoice]))
       .attr('cy', d => newYScale(d[yAxisChoice]))
-      .text(function(d) {
-        return d.abbr;
-      });
 
     return circlesGroup;
-  }
-
-  // function to label circles
-  function renderCircleLabels(circleLabels, xAxisChoice, yAxisChoice) {
-      circleLabels.text('');
-      circleLabels
-          .attr('x', function(d) {
-            return xScale(d[xAxisChoice]);
-          })
-          .attr('y', function(d) {
-            return yScale(d[yAxisChoice]);
-          })
-          .text(function(d) {
-            return d.abbr;
-          })
-          .attr('font-family', 'sans-serif')
-          .attr('font-size', '10px')
-          .attr('text-anchor', 'middle')
-          .attr('alignment-baseline', 'middle')
-          .attr('fill', 'black');
   }
 
   // function used for updating circles group with new tooltip
@@ -153,16 +131,6 @@ function makeResponsive() {
 
     return circlesGroup;
   }
-  // making labels titlecased
-  function toTitleCase(str) {
-      return str.replace(
-        /\w\S*/g,
-        function(txt) {
-          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-        }
-      );
-    }
-
 
   // Retrieve data from the CSV file and execute everything below
   // ---------------------------------------------------------------------------------------------
@@ -215,11 +183,8 @@ function makeResponsive() {
       .text(function(d) {
         return d.abbr;
       })
-      .attr('font-family', 'sans-serif')
-      .attr('font-size', '10px')
-      .attr('text-anchor', 'middle')
       .attr('alignment-baseline', 'middle')
-      .attr('fill', 'black');
+      .classed('stateText', true);
     
     // append circles
     var circlesGroup = chartGroup.selectAll('circle')
@@ -229,10 +194,7 @@ function makeResponsive() {
       .attr('cx', d => xLinScale(d[xAxisChoice]))
       .attr('cy', d => yLinScale(d[yAxisChoice]))
       .attr('r', 10)
-      .attr('stroke', 'black')
-      .attr('stroke-width', '0.5')
-      .attr('fill', 'pink')
-      .attr('opacity', '.3');
+      .classed('stateCircle', true);
 
     // Labels ----------------------------------------
     // Create group for two x-axis labels
@@ -244,7 +206,7 @@ function makeResponsive() {
       .attr('y', 20)
       .attr('value', 'poverty') // value to grab for event listener
       .classed('active', true)
-      .classed('axis-label', true)
+      .classed('aText', true)
       .text('% in Poverty');
 
     var incomeLabel = xLabelsGroup.append('text')
@@ -252,7 +214,7 @@ function makeResponsive() {
       .attr('y', 40)
       .attr('value', 'income') // value to grab for event listener
       .classed('inactive', true)
-      .classed('axis-label', true)
+      .classed('aText', true)
       .text('Median Household Income');
 
     // append y axis label
@@ -265,7 +227,7 @@ function makeResponsive() {
       .attr('value', 'obesity')
       .attr('dy', '1em')
       .classed('active', true)
-      .classed('axis-label', true)
+      .classed('aText', true)
       .text('% Obese');
 
     var smokingLabel = yLabelsGroup.append('text')
@@ -274,7 +236,7 @@ function makeResponsive() {
       .attr('value', 'smokes')
       .attr('dy', '1em')
       .classed('inactive', true)
-      .classed('axis-label', true)
+      .classed('aText', true)
       .text('% who Smoke');
     
     // Title -------------------------------------------
@@ -292,9 +254,8 @@ function makeResponsive() {
       .attr('x', 0)
       .attr('y', 10)
       .attr('dy', '1em')
-      .attr('value', 'poverty_obesity')
       .attr('text-align', 'center')
-      .classed('active', true)
+      .classed('title-text', true)
       .text(`${title_dict[xAxisChoice]} vs. ${title_dict[yAxisChoice]}`);
 
     // Tooltip ----------------------------------------
