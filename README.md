@@ -19,5 +19,18 @@ This project's purpose was to create a scatterplot of information from each US s
     - creating a function that deletes any existing chart (and its containing element, an SVG), draws the chart, basing the chart's containing SVG on a proportion of the window's width and height
     - creating an event listener to note when the page is resized, and triggers the above function
     - calling the function to create the SVG and chart upon page load
+- creating an interactive chart
+    - creating functions that scale x and y axes, render the axes, append a title, and create circles for the scatter plot, all based on a chosen x and y axis value
+    - setting starting x and y axis values for first displaying the chart
+    - reading the source data in using d3.csv()
+    - calling the functions for initial page load
+    - creating event listeners attached to the axis texts that calls an update function, which:
+        - updates the x and y axis choice values
+        - recalls the drawing functions
+- having hover text over each scatter plot circle
+    - creating a function that updates the tooltip, which takes in the x and y axis choice, and returns a text string, which appears on mouseover and disappears on mouseout events
+    - calling the function with the other drawing functions under d3.csv()
+    - re-calling the function within the update function
 
 ### challenges
+
