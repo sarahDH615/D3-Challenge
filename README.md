@@ -34,3 +34,4 @@ This project's purpose was to create a scatterplot of information from each US s
 
 ### challenges
 
+One difficulty in this project was determining the order of functions. Many functions can be defined outside of the reading in of the source data, but a few, such as updateData(), which updates the graph, as well as its event listeners, needed to be within defined within the reading in function, as it is dependant on 'this'. Finally, in order to make the chart responsive, all of the code needed to be wrapped in a function. Consequently, the code is not human-reader-intuitive, where reading from the top to the bottom mimics the sequence of events one sees. 
