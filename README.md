@@ -1,5 +1,7 @@
 ## D3-Challenge
 
+![Example Display](images/exampleDisplay.png)
+
 ### contains
 - D3_data_journalism:
     - index.html: contains html components for the webpage
