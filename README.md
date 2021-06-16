@@ -1,6 +1,6 @@
 ## D3-Challenge
 
-![Example Display](images/exampleDisplay.png)
+![Example Display](images/graphLoop.gif)
 
 ### contains
 - D3_data_journalism:
