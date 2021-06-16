@@ -310,7 +310,7 @@ function makeResponsive() {
       
       // axis labels in/active status
       // changes classes to change bold text
-      if (xAxisChoice === 'income') {
+      if (xAxisChoice == 'income') {
           incomeLabel
               .classed('active', true)
               .classed('inactive', false);
@@ -318,13 +318,30 @@ function makeResponsive() {
               .classed('active', false)
               .classed('inactive', true);
       }
-      else if (yAxisChoice === 'smokes'){
-          smokingLabel
-              .classed('active', true)
-              .classed('inactive', false);
-          obesityLabel
-              .classed('active', false)
-              .classed('inactive', true);
+      else if (xAxisChoice == 'poverty') {
+        povertyLabel
+            .classed('active', true)
+            .classed('inactive', false);
+        incomeLabel
+            .classed('active', false)
+            .classed('inactive', true);
+      }
+
+      if (yAxisChoice == 'smokes'){
+        smokingLabel
+            .classed('active', true)
+            .classed('inactive', false);
+        obesityLabel
+            .classed('active', false)
+            .classed('inactive', true);
+      }
+      else if (yAxisChoice == 'obesity') {
+        obesityLabel
+            .classed('active', true)
+            .classed('inactive', false);
+        smokingLabel
+            .classed('active', false)
+            .classed('inactive', true);
       }
     }
 
