@@ -44,12 +44,12 @@ Another difficulty was creating the responsive page size. Just setting the SVG w
   <img width="800" src="/images/startMakeResponsive.png" alt='Start of Make Responsive Function'>
   <img width="800" src="/images/endMakeResponsive.png" alt='End of Make Responsive Function'>
 </p>
-<!-- 
-![Start of Make Responsive Function](/images/startMakeResponsive.png)
-![End of Make Responsive Function](/images/endMakeResponsive.png) -->
+
 *All of the code is wrapped in this makeResponsive() function.*
 
 
 A final difficulty was the circle text impeding the display of the tooltip hover-text, where the hover-text would only appear around the edge of the circles, where the circle text was not covering the circle. At first, z-index was considered as a solution, to push the hover-text behind the circles in order to make the whole area of the circle available to the tooltip. Upon further research, it was discovered that z-index does not exist within SVGs. Instead the property of SVG that whatever is appended first will be 'under' later elements, was used: appending the labels before the circles themselves, along with giving the circles high transparency, allowed for the labels to be visible, whilst permitting the tooltip hover-text to appear over the whole circle's area. This solution is not optimal, as it depends on having semi-transparent circles, and should be re-visited again. 
 
-![Circle labels appended first, then Circles themselves](/images/circlesOrder.png)
+<p align="left">
+  <img width="800" src="/images/circlesOrder.png" alt='Circle labels appended first, then Circles themselves'>
+</p>
