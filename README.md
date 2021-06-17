@@ -41,8 +41,8 @@ One difficulty in this project was determining the order of functions. In order 
 Another difficulty was creating the responsive page size. Just setting the SVG width and height as (related to) the inner width and height of the window would not lead to responsivity, as it sets the width and height upon the initial page size and does not update it. It therefore needs to be a function that is triggered upon page resize, to update the necessary amount of times. This function also needs to be called at the end of the code, so that the function will run when a person visits the page. As mentioned above, the concept of wrapping all of the code in the page resize function seems somewhat unintuitive, as the code within it is mostly about chart creation, not page resizing, and also violates the concept of function modularity, where a function does one thing, not several; however, everything else in the code depends on the SVG size, just as everything in the chart is contained in the SVG element on the page, so all the code does need to be contained within that overarching function.
 
 <p align="center">
-  <img width="450" src="/images/startMakeResponsive.png" alt='Start of Make Responsive Function'>
-  <img width="450" src="/images/endMakeResponsive.png" alt='End of Make Responsive Function'>
+  <img width="800" src="/images/startMakeResponsive.png" alt='Start of Make Responsive Function'>
+  <img width="800" src="/images/endMakeResponsive.png" alt='End of Make Responsive Function'>
 </p>
 <!-- 
 ![Start of Make Responsive Function](/images/startMakeResponsive.png)
