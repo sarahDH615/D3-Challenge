@@ -40,16 +40,16 @@ One difficulty in this project was determining the order of functions. In order 
 
 Another difficulty was creating the responsive page size. Just setting the SVG width and height as (related to) the inner width and height of the window would not lead to responsivity, as it sets the width and height upon the initial page size and does not update it. It therefore needs to be a function that is triggered upon page resize, to update the necessary amount of times. This function also needs to be called at the end of the code, so that the function will run when a person visits the page. As mentioned above, the concept of wrapping all of the code in the page resize function seems somewhat unintuitive, as the code within it is mostly about chart creation, not page resizing, and also violates the concept of function modularity, where a function does one thing, not several; however, everything else in the code depends on the SVG size, just as everything in the chart is contained in the SVG element on the page, so all the code does need to be contained within that overarching function.
 
-<!-- <p align="center">
-  <img width="90%" src="/images/startMakeResponsive.png" alt='Start of Make Responsive Function'>
-  <img width="90%" src="/images/endMakeResponsive.png" alt='End of Make Responsive Function'>
-</p> -->
-
+<p align="center">
+  <img width="450" src="/images/startMakeResponsive.png" alt='Start of Make Responsive Function'>
+  <img width="450" src="/images/endMakeResponsive.png" alt='End of Make Responsive Function'>
+</p>
+<!-- 
 ![Start of Make Responsive Function](/images/startMakeResponsive.png)
-![End of Make Responsive Function](/images/endMakeResponsive.png)
-
+![End of Make Responsive Function](/images/endMakeResponsive.png) -->
 *All of the code is wrapped in this makeResponsive() function.*
 
 
 A final difficulty was the circle text impeding the display of the tooltip hover-text, where the hover-text would only appear around the edge of the circles, where the circle text was not covering the circle. At first, z-index was considered as a solution, to push the hover-text behind the circles in order to make the whole area of the circle available to the tooltip. Upon further research, it was discovered that z-index does not exist within SVGs. Instead the property of SVG that whatever is appended first will be 'under' later elements, was used: appending the labels before the circles themselves, along with giving the circles high transparency, allowed for the labels to be visible, whilst permitting the tooltip hover-text to appear over the whole circle's area. This solution is not optimal, as it depends on having semi-transparent circles, and should be re-visited again. 
+
 ![Circle labels appended first, then Circles themselves](/images/circlesOrder.png)
